@@ -22,8 +22,8 @@ def heuristic_demo():
     step_cnt = 0
     while True:
 
-        h_, w_ = np.unravel_index(depth.min())
-        x, y, z = camera.rgbd_2_world(_w, _h, depth[h_, w_])
+        #h_, w_ = np.unravel_index(depth.min())
+        x, y, z = camera.rgbd_2_world(_w, _h, depth)
 
         p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
         p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
