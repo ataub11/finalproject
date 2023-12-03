@@ -18,12 +18,12 @@ def heuristic_demo():
     p.resetDebugVisualizerCamera(2.0, -270., -60., (0., 0., 0.))
     p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 1)  # Shadows on/off
 
-    (rgb, depth, seg) = env.reset()
+    _w, _h, rgb, depth = env.reset()
     step_cnt = 0
     while True:
 
-        h_, w_ = np.unravel_index(depth.argmin(), depth.shape)
-        x, y, z = camera.rgbd_2_world(w_, h_, depth[h_, w_])
+        h_, w_ = np.unravel_index(depth.min())
+        x, y, z = camera.rgbd_2_world(_w, _h, depth[h_, w_])
 
         p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
         p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
@@ -65,5 +65,5 @@ def user_control_demo():
 
 
 if __name__ == '__main__':
-    user_control_demo()
-    # heuristic_demo()
+    #user_control_demo()
+    heuristic_demo()

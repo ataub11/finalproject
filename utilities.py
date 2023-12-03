@@ -242,10 +242,10 @@ class Camera:
 
     def shot(self):
         # Get depth values using the OpenGL renderer
-        _w, _h, rgb, depth, seg = p.getCameraImage(self.width, self.height,
+        _w, _h, rgb, depth, extra = p.getCameraImage(self.width, self.height,
                                                    self.view_matrix, self.projection_matrix,
                                                    )
-        return rgb, depth, seg
+        return _w, _h, rgb, depth
 
     def rgbd_2_world_batch(self, depth):
         x = (2 * np.arange(0, self.width) - self.width) / self.width

@@ -287,11 +287,11 @@ class ClutteredPushGrasp:
         self.reset_robot()
         self.reset_obj_state()
         self.move_away_arm()
-        rgb, depth, seg = self.camera.shot()
-        self.prev_observation = (rgb, depth, seg)
+        _w, _h, rgb, depth= self.camera.shot()
+        self.prev_observation = (_w, _h, rgb, depth)
         self.reset_robot()
         self.successful_obj_ids = []
-        return rgb, depth, seg
+        return _w, _h, rgb, depth
 
     def move_away_arm(self):
         joint = self.joints['shoulder_pan_joint']
