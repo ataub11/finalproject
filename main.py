@@ -6,6 +6,7 @@ import pybullet as p
 from tqdm import tqdm
 from env import ClutteredPushGrasp
 from utilities import YCBModels, Camera
+from statistics import mean
 
 def heuristic_demo():
     ycb_models = YCBModels(
@@ -20,12 +21,12 @@ def heuristic_demo():
     _w, _h, rgb, depth = env.reset()
     step_cnt = 0
     while True:
-        a, b = p.getBasePositionAndOrientation(env.obj_ids[0])
-        x, y, z = camera.rgbd_2_world(min(a), min(b), max(depth))
+        pos, orient = p.getBasePositionAndOrientation(env.obj_ids[0])
+        x, y,z = pos[:3]
        
 
-        p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
-        p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
+        #p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
+        #p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
 
         (rgb, depth, seg), reward, done, info = env.step((x, y, z), 1, 'grasp')
 
