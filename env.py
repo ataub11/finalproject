@@ -7,6 +7,7 @@ import pybullet as p
 import pybullet_data
 
 from utilities import Models, setup_sisbot, setup_sisbot_force, Camera
+from agent import BaseAgent
 
 
 class FailToReachTargetError(RuntimeError):
@@ -232,45 +233,18 @@ class ClutteredPushGrasp:
                 for item_id in grasped_ids:
                     self.successful_obj_ids.append(item_id)
                     print('Successful item ID:', item_id)
-                    reward += self.GRASP_SUCCESS_REWARD
+                    #reward += self.GRASP_SUCCESS_REWARD
                     grasp_success = True
 
             self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
 
-        elif action_type == 'push':
-            push_start_xy = (x - np.sin(angle) * self.PUSH_BACK_DIST,
-                             y + np.cos(angle) * self.PUSH_BACK_DIST)
-            push_end_xy = (x + np.sin(angle) * self.PUSH_FORWARD_DIST,
-                           y - np.cos(angle) * self.PUSH_FORWARD_DIST)
-
-            self.close_gripper()
-            self.move_ee((*push_start_xy, self.GRIPPER_MOVING_HEIGHT, orn))
-            _, (real_xyz, real_xyzw) = self.move_ee((*push_start_xy, 0.83, orn),
-                                                    check_collision_config=dict(bool_operator='or', force=100),
-                                                    custom_velocity=0.2, verbose=False, max_step=1000)
-            # Move linearly towards the target - IK will cause problem!
-            # for step_idx in range(1, 120):
-            #     push_step_xy = (real_xyz[0] + (push_end_xy[0] - real_xyz[0]) / step_idx * 120,
-            #                     real_xyz[1] + (push_end_xy[1] - real_xyz[1]) / step_idx * 120)
-            #     self.move_ee((*push_step_xy, real_xyz[2], orn), custom_velocity=0.2, verbose=True)
-            # Move towards the target
-            self.move_ee((*push_end_xy, real_xyz[2], orn), custom_velocity=0.2, verbose=False)
-            self.move_ee((*push_end_xy, self.GRIPPER_MOVING_HEIGHT, orn))
-
         self.move_away_arm()
         self.open_gripper()
-        # TODO: Check if object is outside the environment
-        rgb, depth, seg = self.camera.shot()
-        depth_changed = self.check_depth_change(depth)
-        if action_type == 'grasp' and not grasp_success:
-            reward += self.GRASP_FAIL_REWARD
-        if action_type == 'push':
-            if depth_changed:
-                reward += self.PUSH_SUCCESS_REWARD
-            else:
-                reward += self.PUSH_FAIL_REWARD
-        observation = (rgb, depth, seg)
-        self.prev_observation = observation
+        
+        
+        #if action_type == 'grasp' and not grasp_success:
+            #reward += self.GRASP_FAIL_REWARD
+       
         done = (len(self.successful_obj_ids) == len(self.obj_ids))
         return observation, reward, done, info
 

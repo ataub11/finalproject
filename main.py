@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 import pybullet as p
-
+import time
 from tqdm import tqdm
 from env import ClutteredPushGrasp
 from utilities import YCBModels, Camera
@@ -20,20 +20,16 @@ def heuristic_demo():
 
     _w, _h, rgb, depth = env.reset()
     step_cnt = 0
+    objnum = 2
     while True:
-        pos, orient = p.getBasePositionAndOrientation(env.obj_ids[0])
-        x, y,z = pos[:3]
-       
-
-        #p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
-        #p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
-
-        (rgb, depth, seg), reward, done, info = env.step((x, y, z), 1, 'grasp')
-
-        print('Step %d, grasp at %.2f,%.2f,%.2f, reward %f, done %s, info %s' %
-              (step_cnt, x, y, z, reward, done, info))
-        step_cnt += 1
-        # time.sleep(3)
+        if (objnum >= 0):
+            pos, orient = p.getBasePositionAndOrientation(env.obj_ids[objnum])
+            x, y,z = pos[:3]
+            env.step((x, y, z), 1, 'grasp')
+            step_cnt += 1
+            objnum -= 1
+        else:
+            time.sleep(3)
 
 
 def user_control_demo():
