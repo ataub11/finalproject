@@ -50,7 +50,7 @@ class ClutteredPushGrasp:
                                   p.getQuaternionFromEuler([0, 0, 0]),
                                   useFixedBase=True)
         self.tablbID = p.loadURDF("./urdf/objects/table.urdf",
-                                  [.75, 0, .6],
+                                  [.75, .05, .6],
                                   p.getQuaternionFromEuler([0, 0, 0]),
                                   useFixedBase=True)
         self.UR5StandID = p.loadURDF("./urdf/objects/ur5_stand.urdf",
@@ -115,6 +115,7 @@ class ClutteredPushGrasp:
     def load_objects(self, num):
         for _ in range(num):
             vis_shape, col_shape = random.choice(self.models)
+            
             obj_handle = p.createMultiBody(baseMass=0.2,
                                            baseInertialFramePosition=[0, 0, 0],
                                            baseCollisionShapeIndex=col_shape,
@@ -127,6 +128,7 @@ class ClutteredPushGrasp:
                                            baseOrientation=p.getQuaternionFromEuler((np.random.uniform(-np.pi, np.pi),
                                                                                      np.random.uniform(0, np.pi),
                                                                                      np.random.uniform(-np.pi, np.pi)))
+                                          
                                            )
             p.changeDynamics(obj_handle, -1, lateralFriction=1, rollingFriction=0.01, spinningFriction=0.001,
                              restitution=0.01)

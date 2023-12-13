@@ -20,8 +20,9 @@ def heuristic_demo():
     _w, _h, rgb, depth = env.reset()
     step_cnt = 0
     while True:
-        #h_, w_ = (min(depth), len(depth) )
-        x, y, z = camera.rgbd_2_world(0, 0, max(depth))
+        a, b = p.getBasePositionAndOrientation(env.obj_ids[0])
+        x, y, z = camera.rgbd_2_world(min(a), min(b), max(depth))
+       
 
         p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
         p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
