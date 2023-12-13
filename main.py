@@ -7,21 +7,21 @@ from tqdm import tqdm
 from env import ClutteredPushGrasp
 from utilities import YCBModels, Camera
 
-
 def heuristic_demo():
     ycb_models = YCBModels(
-        os.path.join('./data/ycb', '**', 'textured-decmp.obj'),
+        os.path.join('./data/ycb', '061_foam_brick', 'textured-decmp.obj'),
     )
     camera = Camera((0, -0.5, 1.5), 0.1, 5, (320, 320), 40)
 
-    env = ClutteredPushGrasp(ycb_models, camera, vis=True, num_objs=5, gripper_type='85')
+    env = ClutteredPushGrasp(ycb_models, camera, vis=True, num_objs=3, gripper_type='85')
     p.resetDebugVisualizerCamera(2.0, -270., -60., (0., 0., 0.))
     p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 1)  # Shadows on/off
 
     _w, _h, rgb, depth = env.reset()
     step_cnt = 0
     while True:
-        x, y, z = camera.rgbd_2_world(_w, _h, 1)
+        #h_, w_ = (min(depth), len(depth) )
+        x, y, z = camera.rgbd_2_world(0, 0, max(depth))
 
         p.addUserDebugLine([x, y, 0], [x, y, z], [0, 1, 0])
         p.addUserDebugLine([x, y, z], [x, y, z+0.05], [1, 0, 0])
@@ -36,7 +36,7 @@ def heuristic_demo():
 
 def user_control_demo():
     ycb_models = YCBModels(
-        os.path.join('./data/ycb', '**', 'textured-decmp.obj'),
+        os.path.join('./data/ycb', "036_wood_block", 'textured-decmp.obj'),
     )
     camera = Camera((0, -0.5, 1.5), 0.1, 5, (320, 320), 40)
 

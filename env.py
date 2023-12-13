@@ -50,7 +50,7 @@ class ClutteredPushGrasp:
                                   p.getQuaternionFromEuler([0, 0, 0]),
                                   useFixedBase=True)
         self.tablbID = p.loadURDF("./urdf/objects/table.urdf",
-                                  [.75, 0, .8],
+                                  [.75, 0, .6],
                                   p.getQuaternionFromEuler([0, 0, 0]),
                                   useFixedBase=True)
         self.UR5StandID = p.loadURDF("./urdf/objects/ur5_stand.urdf",
