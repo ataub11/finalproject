@@ -239,6 +239,8 @@ class ClutteredPushGrasp:
             self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
 
         self.move_away_arm()
+       
+        #self.move_ee((x+.5, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
         self.open_gripper()
         
         
@@ -280,7 +282,6 @@ class ClutteredPushGrasp:
                                     targetPosition=0., force=joint.maxForce,
                                     maxVelocity=joint.maxVelocity)
             self.step_simulation()
-
     def check_grasped_id(self):
         left_index = self.joints['left_inner_finger_pad_joint'].id
         right_index = self.joints['right_inner_finger_pad_joint'].id

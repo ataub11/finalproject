@@ -104,7 +104,7 @@ def setup_sisbot(p, robotID, gripper_type):
         else:
             raise NotImplementedError("controlGripper does not support \"{}\" control mode".format(controlMode))
         # check if there
-        if len(kwargs) is not 0:
+        if len(kwargs) != 0:
             raise KeyError("No keys {} in controlGripper".format(", ".join(kwargs.keys())))
 
     assert gripper_type in ['85', '140']
@@ -181,7 +181,7 @@ def setup_sisbot_force(p, robotID, gripper_type):
         else:
             raise NotImplementedError("controlGripper does not support \"{}\" control mode".format(controlMode))
         # check if there
-        if len(kwargs) is not 0:
+        if len(kwargs) != 0:
             raise KeyError("No keys {} in controlGripper".format(", ".join(kwargs.keys())))
 
     assert gripper_type in ['85', '140']
