@@ -438,6 +438,7 @@ class ClutteredPushGrasp:
 
             self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
             print(robo)
+            self.move_away_arm()
             iksolution = p.calculateInverseKinematics(self.robotID, self.eefID, [robo[0], robo[1], 1.2])
             for i, name in enumerate(self.controlJoints[:-1]):  # Filter out the gripper
                 joint = self.joints[name]
@@ -445,7 +446,7 @@ class ClutteredPushGrasp:
                 # control robot end-effector
                 p.setJointMotorControl2(self.robotID, joint.id, p.POSITION_CONTROL,
                                         targetPosition=pose, force=joint.maxForce,
-                                        maxVelocity=1)
+                                        maxVelocity=joint.maxVelocity/4)
 
             self.step_simulation()
 

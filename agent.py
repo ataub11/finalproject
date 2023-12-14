@@ -29,9 +29,9 @@ class BaseAgent(object):
         for num in range(objs):
             pos, ori = p.getBasePositionAndOrientation(moved[num-1])
             checkX, checkY, checkZ = pos[:3]
-            if(checkX -.001 <= x <= checkX +.001):
+            if(checkX -.01 <= x <= checkX +.01):
                 reward -= .25
-            if((checkY -.001 <= y <= checkY +.001)):
+            if((checkY -.01 <= y <= checkY +.01)):
                 reward -= .5
         return reward
     def pickAction(objnum, allMoved):
