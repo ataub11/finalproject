@@ -6,26 +6,35 @@ import time
 from tqdm import tqdm
 from env import ClutteredPushGrasp
 from utilities import YCBModels, Camera
-from statistics import mean
+from agent import BaseAgent
 
 def heuristic_demo():
     ycb_models = YCBModels(
         os.path.join('./data/ycb', '061_foam_brick', 'textured-decmp.obj'),
     )
     camera = Camera((0, -0.5, 1.5), 0.1, 5, (320, 320), 40)
+    objnum = 4
 
-    env = ClutteredPushGrasp(ycb_models, camera, vis=True, num_objs=3, gripper_type='85')
+    env = ClutteredPushGrasp(ycb_models, camera, vis=True, num_objs=objnum, gripper_type='85')
     p.resetDebugVisualizerCamera(2.0, -270., -60., (0., 0., 0.))
     p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 1)  # Shadows on/off
 
     _w, _h, rgb, depth = env.reset()
     step_cnt = 0
-    objnum = 2
+    objnum -=1
     while True:
         if (objnum >= 0):
             pos, orient = p.getBasePositionAndOrientation(env.obj_ids[objnum])
             x, y,z = pos[:3]
-            env.step((x, y, z), 1, 'grasp')
+            if step_cnt == 0:
+                env.step((x, y, z), 1, 'grasp')
+            else:
+                target = BaseAgent.pickAction(env, objnum, env.successful_obj_ids)
+                pos, orient = p.getBasePositionAndOrientation(env.obj_ids[objnum])
+                x,y,z = pos[:3]
+                target.append(0)
+                env.Agentstep(pos, 1, 'grasp', target)
+
             step_cnt += 1
             objnum -= 1
         else:

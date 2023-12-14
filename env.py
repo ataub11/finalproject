@@ -239,8 +239,6 @@ class ClutteredPushGrasp:
             self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
 
         self.move_away_arm()
-       
-        #self.move_ee((x+.5, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
         self.open_gripper()
         
         
@@ -391,3 +389,52 @@ class ClutteredPushGrasp:
 
     def close(self):
         p.disconnect(self.physicsClient)
+    
+    def Agentstep(self, position: tuple, angle: float, action_type: str, robo, debug: bool = False):
+        """
+        position [x y z]: The axis in real-world coordinate
+        angle: float,   for grasp, it should be in [-pi/2, pi/2)
+                        for push,  it should be in [0, 2pi)
+        """
+        x, y, z, roll, pitch, yaw, gripper_opening_length = self.read_debug_parameter()
+        roll, pitch = 0, np.pi / 2
+        if not debug:
+            x, y, z = position
+            yaw = angle if action_type == 'grasp' else 0.0
+        orn = p.getQuaternionFromEuler([roll, pitch, yaw])
+        if debug:
+            self.move_ee((x, y, z, orn))
+            # self.move_gripper(gripper_opening_length, 1)
+            return
+        # The return value of the step() method
+        observation, reward, done, info = None, 0.0, False, dict()
+        self.reset_robot()
+        self.move_ee((x, y, self.GRIPPER_MOVING_HEIGHT, orn))  # Top-Down grasp / push
+        grasp_success, push_success = False, False
+        if action_type == 'grasp':
+            self.open_gripper()
+            self.move_ee((x, y, z + self.GRASP_POINT_OFFSET_Z, orn),
+                         custom_velocity=0.05, max_step=1000)
+            # item_in_gripper = self.close_gripper(check_contact=True)
+            item_in_gripper = self.close_gripper(check_contact=True)
+            print('Item in Gripper!')
+            # When lifting the object, constantly try to close the gripper, in case of dropping
+            self.move_ee((x, y, z + self.GRASP_POINT_OFFSET_Z + 0.1, orn), try_close_gripper=False,
+                         custom_velocity=0.05, max_step=1000)
+            # Lift 10 cm
+            if item_in_gripper:
+                grasped_ids = self.check_grasped_id()
+                for item_id in grasped_ids:
+                    self.successful_obj_ids.append(item_id)
+                    print('Successful item ID:', item_id)
+                    #reward += self.GRASP_SUCCESS_REWARD
+                    grasp_success = True
+
+            self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
+            iksolution = p.calculateInverseKinematics(self.robotID, self.eefID, robo)
+            for i in range(self.joints):
+                p.setJointMotorControl2(self.robotID, i, p.POSITION_CONTROL, targetPosition = iksolution[i] )
+
+        
+        self.open_gripper()
+        
