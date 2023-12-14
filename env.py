@@ -239,6 +239,12 @@ class ClutteredPushGrasp:
             self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
 
         self.move_away_arm()
+        joint = self.joints['elbow_joint']
+        for _ in range(-5):
+            p.setJointMotorControl2(self.robotID, joint.id, p.POSITION_CONTROL,
+                                    targetPosition=-.5, force=joint.maxForce,
+                                    maxVelocity=joint.maxVelocity)
+            self.step_simulation()
         self.open_gripper()
         
         
@@ -390,7 +396,7 @@ class ClutteredPushGrasp:
     def close(self):
         p.disconnect(self.physicsClient)
     
-    def Agentstep(self, position: tuple, angle: float, action_type: str, robo, debug: bool = False):
+    def Agentstep(self, position: tuple, angle: float, action_type: str, robo: tuple, debug: bool = False):
         """
         position [x y z]: The axis in real-world coordinate
         angle: float,   for grasp, it should be in [-pi/2, pi/2)
@@ -431,9 +437,17 @@ class ClutteredPushGrasp:
                     grasp_success = True
 
             self.move_ee((x, y, self.GRIPPER_GRASPED_LIFT_HEIGHT, orn), try_close_gripper=False, max_step=1000)
-            iksolution = p.calculateInverseKinematics(self.robotID, self.eefID, robo)
-            for i in range(self.joints):
-                p.setJointMotorControl2(self.robotID, i, p.POSITION_CONTROL, targetPosition = iksolution[i] )
+            print(robo)
+            iksolution = p.calculateInverseKinematics(self.robotID, self.eefID, [robo[0], robo[1], 1.2])
+            for i, name in enumerate(self.controlJoints[:-1]):  # Filter out the gripper
+                joint = self.joints[name]
+                pose = iksolution[i]
+                # control robot end-effector
+                p.setJointMotorControl2(self.robotID, joint.id, p.POSITION_CONTROL,
+                                        targetPosition=pose, force=joint.maxForce,
+                                        maxVelocity=1)
+
+            self.step_simulation()
 
         
         self.open_gripper()

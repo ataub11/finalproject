@@ -9,19 +9,20 @@ import random
 
 
 class BaseAgent(object):
-    def potentialAct(self, objnum, allMovedobjs):
-        targetCenter = p.getBasePositionAndOrientation(self.tablebID)
-        targetCenterX, targetCenterY, targetCenterZ = targetCenter[:3]
+    def potentialAct(objnum, allMovedobjs):
+        targetCenterX, targetCenterY = .75, .05
         potentialMoves = dict()
         targetX = targetCenterX - .5
         targetY = targetCenterY - .5
         while (targetX < (targetCenterX+.5) and targetY < (targetCenterY+.5)):
-            score = BaseAgent.scoreLocations(self, objnum, allMovedobjs, targetX, targetY)
-            pos = [targetX, targetY]
-            potentialMoves.update(score, pos)
-            print(potentialMoves)
+            score = BaseAgent.scoreLocations(objnum, allMovedobjs, targetX, targetY)
+            pos = [targetX, targetY, 1.2]
+            potentialMoves[score] = pos
+            targetX += .05
+            targetY += .05
+        print(potentialMoves)
         return potentialMoves
-    def scoreLocations(self, objnum, allMovedobjs, x, y):
+    def scoreLocations(objnum, allMovedobjs, x, y):
         objs = objnum
         moved = allMovedobjs
         reward = 0
@@ -33,14 +34,14 @@ class BaseAgent(object):
             if((checkY -.001 <= y <= checkY +.001)):
                 reward -= .5
         return reward
-    def pickAction(self, objnum, allMoved):
+    def pickAction(objnum, allMoved):
         obj = objnum
         moved = allMoved
-        allMoves = BaseAgent.potentialAct(self, obj, moved)
+        allMoves = BaseAgent.potentialAct(obj, moved)
         scores = allMoves.keys()
         best = max(scores)
-        targets = allMoves.get(best, [])
-        return random.choice(targets)
+        targets = allMoves.get(best)
+        return targets
 
 
 

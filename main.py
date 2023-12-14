@@ -28,11 +28,11 @@ def heuristic_demo():
             x, y,z = pos[:3]
             if step_cnt == 0:
                 env.step((x, y, z), 1, 'grasp')
+                time.sleep(2)
             else:
-                target = BaseAgent.pickAction(env, objnum, env.successful_obj_ids)
+                target = BaseAgent.pickAction(objnum, env.successful_obj_ids)
                 pos, orient = p.getBasePositionAndOrientation(env.obj_ids[objnum])
                 x,y,z = pos[:3]
-                target.append(0)
                 env.Agentstep(pos, 1, 'grasp', target)
 
             step_cnt += 1
