@@ -1,4 +1,4 @@
-#Incorporating Previous Action Effects into Planning for Next Goal
+## Incorporating Previous Action Effects into Planning for Next Goal
 
 
 This repo is under active development. Issues / PRs are welcomed.
@@ -21,9 +21,9 @@ This repo is under active development. Issues / PRs are welcomed.
 You can try this repo with any demo.
 ```[Python]
 python main.py
+```
+## References 
 
-
-###  References
 https://github.com/matafela/pybullet_grasp_annotator_robotiq_85
 
 https://github.com/zswang666/pybullet-playground
