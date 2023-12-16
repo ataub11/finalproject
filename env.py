@@ -244,7 +244,9 @@ class ClutteredPushGrasp:
             p.setJointMotorControl2(self.robotID, joint.id, p.POSITION_CONTROL,
                                     targetPosition=-.5, force=joint.maxForce,
                                     maxVelocity=joint.maxVelocity)
+            
             self.step_simulation()
+            self.open_gripper()
         self.open_gripper()
         
         
@@ -448,8 +450,6 @@ class ClutteredPushGrasp:
                                         targetPosition=pose, force=joint.maxForce,
                                         maxVelocity=joint.maxVelocity/4)
 
-            self.step_simulation()
-
-        
         self.open_gripper()
+        self.step_simulation()
         

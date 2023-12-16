@@ -41,7 +41,7 @@ def box_demo():
             time.sleep(3)
 def weird_demo():
     ycb_models = YCBModels(
-        os.path.join('./data/ycb', '021_bleach_cleanser', 'textured-decmp.obj'),
+        os.path.join('./data/ycb', '011_banana', 'textured-decmp.obj'),
     )
     camera = Camera((0, -0.5, 1.5), 0.1, 5, (320, 320), 40)
     objnum = 4
@@ -72,7 +72,7 @@ def weird_demo():
             time.sleep(3)
 def round_demo():
     ycb_models = YCBModels(
-        os.path.join('./data/ycb', '011_banana', 'textured-decmp.obj'),
+        os.path.join('./data/ycb', '007_tuna_fish_can', 'textured-decmp.obj'),
     )
     camera = Camera((0, -0.5, 1.5), 0.1, 5, (320, 320), 40)
     objnum = 4
@@ -135,7 +135,7 @@ def combined_demo():
             time.sleep(3)
 
 if __name__ == '__main__':
-    #box_demo()
+    box_demo()
     #weird_demo()
     #round_demo()
-    combined_demo()
+    #combined_demo()

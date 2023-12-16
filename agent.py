@@ -13,7 +13,7 @@ class BaseAgent(object):
         targetCenterX, targetCenterY = .75, .05
         potentialMoves = dict()
         targetX = targetCenterX - .5
-        targetY = targetCenterY - .5
+        targetY = -1
         while (targetX < (targetCenterX+.5) and targetY < (targetCenterY+.5)):
             score = BaseAgent.scoreLocations(objnum, allMovedobjs, targetX, targetY)
             pos = [targetX, targetY, 1.2]
